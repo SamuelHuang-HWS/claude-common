@@ -1,0 +1,7 @@
+{
+  "env": {
+    "ANTHROPIC_API_KEY": "sk-7c00df40759c4f7a95f14452c80ce0ec",
+    "ANTHROPIC_BASE_URL": "http://127.0.0.1:8045"
+  },
+  "model": "haiku"
+}
