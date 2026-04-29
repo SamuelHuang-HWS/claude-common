@@ -1,0 +1,32 @@
+name: proj-start
+role: main_chain
+entry_type: default
+what: "项目任务启动入口，负责需求理解、定级、缺口识别和路由"
+when: "收到新需求、bug、重构、调研或用户想先判断怎么起手时"
+required_inputs:
+  - raw_user_request
+  - project_rules_or_default_contract
+optional_inputs:
+  - existing_spec_or_issue
+  - tracker_context
+required_outputs:
+  - task_understanding
+  - classification
+  - gaps
+  - route
+expected_output_format: structured
+forbidden_actions:
+  - direct_code_implementation
+  - skip_routing
+  - bypass_user_gate
+requires_user_gate: true
+next_skills:
+  - proj-pm
+  - proj-struct
+  - proj-uiux
+  - proj-review
+  - proj-adr
+  - proj-checkpoint
+  - proj-exec
+  - proj-qa
+  - proj-docs

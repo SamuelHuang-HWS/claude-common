@@ -1,0 +1,25 @@
+name: proj-struct
+role: support
+entry_type: routed
+what: "高复杂度或碎片化输入的结构梳理与图示表达"
+when: "需要理清层级、模块、流程、依赖或生成大纲/流程图/架构草图时"
+required_inputs:
+  - complex_or_fragmented_input
+optional_inputs:
+  - output_type
+  - existing_docs_or_diagrams
+required_outputs:
+  - structured_summary
+  - outline_or_diagram
+  - route
+expected_output_format: structured
+forbidden_actions:
+  - define_final_product_scope
+  - write_implementation_code
+  - replace_architecture_decision
+requires_user_gate: true
+next_skills:
+  - proj-pm
+  - proj-review
+  - proj-start
+  - proj-exec

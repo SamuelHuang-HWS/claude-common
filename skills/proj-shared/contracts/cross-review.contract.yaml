@@ -1,0 +1,24 @@
+name: cross-review
+role: enhancement
+entry_type: routed
+what: "轻量级跨模型复核，面向 step/task 级双评审"
+when: "需要 Codex/Claude/Gemini 等 Reviewer 对步骤或任务结果做只读复核时"
+required_inputs:
+  - step_or_task_output
+  - review_context
+optional_inputs:
+  - review_packet
+  - acceptance_criteria
+required_outputs:
+  - review_result
+  - gate_recommendation
+expected_output_format: structured
+forbidden_actions:
+  - write_files
+  - commit_changes
+  - final_qa_gate
+requires_user_gate: false
+next_skills:
+  - proj-exec
+  - proj-start
+max_rounds: 2

@@ -1,0 +1,31 @@
+name: proj-review
+role: enhancement
+entry_type: routed
+what: "开发前方案评审，审查 PRD、MVP、技术方案、验收标准和风险"
+when: "准备进入实施前，需要判断方案是否完备、可落地、可验证并达到 Ready for Dev 时"
+required_inputs:
+  - prd_spec_or_plan
+  - acceptance_criteria
+optional_inputs:
+  - technical_plan
+  - risk_register
+  - architecture_context
+required_outputs:
+  - review_verdict
+  - findings
+  - risk_register
+  - ready_for_dev_status
+  - route
+expected_output_format: structured
+forbidden_actions:
+  - write_code
+  - execute_tests
+  - replace_formal_adr
+requires_user_gate: true
+next_skills:
+  - proj-exec
+  - proj-pm
+  - proj-struct
+  - proj-uiux
+  - proj-adr
+max_rounds: 2

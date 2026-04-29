@@ -1,0 +1,25 @@
+name: proj-dev
+role: enhancement
+entry_type: routed
+what: "高级工程师增强模式，提供复杂实现策略、局部架构和测试策略增强"
+when: "任务已进入实施阶段，且出现复杂实现、局部架构或工程质量增强需求时"
+required_inputs:
+  - implementation_context
+optional_inputs:
+  - current_slice
+  - code_structure_notes
+  - quality_risks
+required_outputs:
+  - implementation_guidance
+  - quality_recommendations
+  - route
+expected_output_format: structured
+forbidden_actions:
+  - replace_proj_exec_mainline
+  - bypass_architecture_gate
+  - commit_changes
+requires_user_gate: false
+next_skills:
+  - proj-exec
+  - proj-qa
+  - proj-adr

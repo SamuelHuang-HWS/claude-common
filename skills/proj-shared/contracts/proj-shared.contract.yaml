@@ -1,0 +1,20 @@
+name: proj-shared
+role: support
+entry_type: internal
+what: "proj-* 技能族共享协议、默认契约、模板、检查器和 Harness Kernel"
+when: "其他 proj-* skill 需要读取复杂度、文档、验证、提交、Gate、Review Loop 或 Contract 规则时"
+required_inputs:
+  - current_phase_or_protocol_need
+optional_inputs:
+  - project_contract
+  - specific_reference_request
+required_outputs:
+  - relevant_protocol_reference
+  - default_contract_guidance
+expected_output_format: structured
+forbidden_actions:
+  - direct_task_execution
+  - modify_project_files_as_entrypoint
+  - replace_user_gate
+requires_user_gate: false
+next_skills: []

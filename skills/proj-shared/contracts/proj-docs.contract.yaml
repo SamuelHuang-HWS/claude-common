@@ -1,0 +1,23 @@
+name: proj-docs
+role: main_chain
+entry_type: routed
+what: "项目文档生命周期管理，负责工作文档归档、合并、changelog 和知识候选"
+when: "实施和 QA 后，需要整理工作区文档、归档最终记录或修正 changelog 指向时"
+required_inputs:
+  - completed_task_context
+optional_inputs:
+  - qa_verdict
+  - docs_mapping
+  - archive_target
+required_outputs:
+  - docs_mapping_result
+  - archive_dossier
+  - changelog_updates
+expected_output_format: structured
+forbidden_actions:
+  - change_business_logic
+  - delete_source_without_confirmation
+  - commit_changes
+requires_user_gate: true
+next_skills:
+  - proj-close

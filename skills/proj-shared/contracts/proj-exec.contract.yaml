@@ -1,0 +1,27 @@
+name: proj-exec
+role: main_chain
+entry_type: routed
+what: "项目任务实施主入口，负责代码落地、缺陷修复、工作文档更新和验证证据"
+when: "任务已明确、关键方案已定，且用户已放行进入开发或修复阶段时"
+required_inputs:
+  - task_understanding
+  - user_permission
+optional_inputs:
+  - current_slice
+  - implementation_plan
+  - tracker_context
+required_outputs:
+  - implementation_result
+  - verification_evidence
+  - changed_scope_summary
+expected_output_format: structured
+forbidden_actions:
+  - commit_changes
+  - push_changes
+  - skip_verification
+requires_user_gate: true
+next_skills:
+  - proj-dev
+  - proj-checkpoint
+  - proj-qa
+  - proj-docs

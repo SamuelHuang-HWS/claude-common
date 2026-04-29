@@ -1,0 +1,25 @@
+name: proj-adr
+role: support
+entry_type: routed
+what: "架构决策记录入口，生成或更新 ADR"
+when: "涉及新依赖、核心模型、关键协议、边界、路由、状态模型或架构性变更时"
+required_inputs:
+  - architecture_decision_context
+optional_inputs:
+  - options_considered
+  - risk_tradeoffs
+  - existing_adr
+required_outputs:
+  - adr_record
+  - decision_summary
+  - consequences
+expected_output_format: structured
+forbidden_actions:
+  - implement_code_changes
+  - bypass_user_architecture_gate
+  - commit_changes
+requires_user_gate: true
+next_skills:
+  - proj-review
+  - proj-checkpoint
+  - proj-exec

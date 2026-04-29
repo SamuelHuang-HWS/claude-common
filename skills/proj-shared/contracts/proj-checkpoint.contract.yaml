@@ -1,0 +1,24 @@
+name: proj-checkpoint
+role: support
+entry_type: routed
+what: "项目改动检查点入口，用于创建、校验或列出可回溯基线"
+when: "高风险改动、重构、迁移或核心链路修改前后需要安全回滚锚点时"
+required_inputs:
+  - checkpoint_intent
+optional_inputs:
+  - current_git_state
+  - risk_context
+required_outputs:
+  - checkpoint_result
+  - rollback_reference
+  - safety_assessment
+expected_output_format: structured
+forbidden_actions:
+  - destructive_cleanup_without_confirmation
+  - commit_unrelated_changes
+  - bypass_user_gate
+requires_user_gate: true
+next_skills:
+  - proj-exec
+  - proj-qa
+  - proj-close

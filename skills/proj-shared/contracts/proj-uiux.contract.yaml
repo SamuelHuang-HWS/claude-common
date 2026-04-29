@@ -1,0 +1,26 @@
+name: proj-uiux
+role: enhancement
+entry_type: routed
+what: "UI/UX 设计语义补全，补齐状态、交互反馈和视觉约束"
+when: "已有 PRD/spec/交互稿/Figma，但开发和 QA 仍缺少可消费的设计语义时"
+required_inputs:
+  - product_or_design_input
+optional_inputs:
+  - design_system_context
+  - figma_or_mockup_reference
+required_outputs:
+  - interaction_semantics
+  - required_states
+  - visual_constraints
+  - route
+expected_output_format: structured
+forbidden_actions:
+  - redefine_product_scope
+  - write_code
+  - final_qa_gate
+requires_user_gate: true
+next_skills:
+  - proj-start
+  - proj-review
+  - proj-struct
+  - proj-exec

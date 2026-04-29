@@ -1,0 +1,37 @@
+# Review Packet Template
+# Used by cross-review and proj-qa to structure review requests.
+# Reference: proj-shared/references/review-loop-policy-v1.md
+
+review_packet:
+  # Required fields
+  mode: step | task | qa           # step = single step, task = full task, qa = quality gate
+  target: "<step title or task name>"
+  task_summary: "<concise description of what was done>"
+  phase: "cross-review | proj-review | proj-qa"
+
+  # Context
+  changed_files:
+    - "<file path>"
+  acceptance_criteria:
+    - "<criterion>"
+
+  # Antigravity's own assessment
+  antigravity_assessment:
+    verdict: PASS | FIX | UNCERTAIN
+    reason: "<reason for this verdict>"
+
+  # Evidence
+  verification_evidence:
+    - command: "<command executed>"
+      result: "<output or summary>"
+
+  # Relevant rules (optional, helps reviewer focus)
+  relevant_rules:
+    - "Sisyphus V3.0"
+    - "proj-shared"
+
+  # Questions for the reviewer
+  questions:
+    - "是否同意 Antigravity 的评估？"
+    - "是否发现 Antigravity 遗漏的问题？"
+    - "最终建议：PASS 还是 FIX？"

@@ -1,0 +1,167 @@
+version: 1
+
+docs:
+  workspace:
+    structured_default: docs/_scaffold
+    issue_workspace_default: docs/issues
+
+  archive_root_default: docs/archive
+  changelog_default: docs/CHANGELOG.md
+  knowledge_default: docs/knowledge_base
+
+  naming:
+    feature_primary_doc: "plan-{topic}.md"
+    bug_primary_doc: "fix-session-{YYYYMMDD}-{topic}.md"
+    tracker_primary_doc: "session-{topic}.md"
+
+  policy:
+    l1_requires_primary_work_doc: true
+    l1_force_plan: false
+    primary_doc_identify_by_role: true
+    merge_duplicate_archives: true
+    changelog_points_to_final_archive: true
+    delete_workspace_source_after_archive: false
+
+tracker:
+  enabled: auto
+  session_style: one-session-one-file
+  require_external_id_mapping: true
+  require_acceptance_trace: true
+  default_grouping: by_root_cause
+
+verify:
+  command_discovery_order:
+    package_manager:
+      - pnpm
+      - yarn
+      - npm
+
+  node:
+    quick:
+      - typecheck
+    full:
+      - typecheck
+      - build
+      - lint
+      - test
+    pre_pr:
+      - typecheck
+      - build
+      - lint
+      - test
+      - security
+
+  go:
+    quick:
+      - test
+    full:
+      - test
+    pre_pr:
+      - test
+      - security
+
+  flutter:
+    quick:
+      - analyze
+    full:
+      - analyze
+      - test
+    pre_pr:
+      - analyze
+      - test
+      - security
+
+  python:
+    quick:
+      - test
+    full:
+      - test
+      - lint
+      - typecheck
+    pre_pr:
+      - test
+      - lint
+      - typecheck
+      - security
+
+  policy:
+    l0_bug_requires_targeted_regression: true
+    l2_high_risk_default_level: pre_pr
+
+git:
+  commit_preview_required: true
+  auto_stage: false
+  auto_push: false
+  push_requires_explicit_user_confirmation: true
+  amend_requires_force_with_lease: true
+
+execution:
+  default_mode:
+    proj_docs: plan
+    proj_close: plan
+
+  without_project_contract:
+    proj_start: apply
+    proj_exec: apply
+    proj_qa: apply
+    proj_docs: plan
+    proj_close: plan
+
+  require_confirmation_for:
+    - archive_delete_source
+    - bulk_doc_move
+    - git_push
+
+safety:
+  destructive_ops_require_confirmation: true
+  unknown_doc_workspace_defaults_to_plan: true
+  unknown_archive_target_defaults_to_plan: true
+  mixed_code_and_doc_changes_require_scope_check: true
+
+review_loop:
+  max_rounds: 2
+  doom_loop_detection: declared
+  reviewer_default: codex
+  reviewer_permissions:
+    can_read: true
+    can_suggest_patch: true
+    can_write_files: false
+    can_commit: false
+    can_push: false
+  adoption_log_required: true
+
+discovery:
+  workspace_structured_fallbacks:
+    - docs/plans
+
+  workspace_issue_fallbacks:
+    - docs/tapd-workflow
+    - docs/sessions
+
+  workspace_log_fallbacks:
+    - docs/worklog
+    - docs/logs
+
+  archive_root_fallbacks:
+    - archive
+
+  changelog_fallbacks:
+    - CHANGELOG.md
+
+  knowledge_fallbacks:
+    - knowledge_base
+
+  project_rule_files:
+    - AGENTS.md
+    - .claude/CLAUDE.md
+    - README.md
+
+  package_files:
+    - package.json
+    - pnpm-lock.yaml
+    - yarn.lock
+    - package-lock.json
+    - go.mod
+    - pubspec.yaml
+    - pyproject.toml
+    - requirements.txt

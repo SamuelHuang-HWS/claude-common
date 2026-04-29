@@ -1,0 +1,34 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "name": { "type": "string", "minLength": 1 },
+    "role": { "enum": ["main_chain", "enhancement", "support", "deprecated"] },
+    "entry_type": { "enum": ["default", "routed", "direct", "internal"] },
+    "what": { "type": "string", "minLength": 1 },
+    "when": { "type": "string", "minLength": 1 },
+    "required_inputs": { "type": "array", "items": { "type": "string" }, "minItems": 1 },
+    "optional_inputs": { "type": "array", "items": { "type": "string" } },
+    "required_outputs": { "type": "array", "items": { "type": "string" }, "minItems": 1 },
+    "expected_output_format": { "enum": ["structured", "freeform"] },
+    "forbidden_actions": { "type": "array", "items": { "type": "string" }, "minItems": 1 },
+    "requires_user_gate": { "type": "boolean" },
+    "next_skills": { "type": "array", "items": { "type": "string" } },
+    "max_rounds": { "type": "integer" },
+    "triggers": { "type": "array", "items": { "type": "string" } },
+    "deprecated_by": { "type": "string" }
+  },
+  "required": [
+    "name",
+    "role",
+    "entry_type",
+    "what",
+    "when",
+    "required_inputs",
+    "required_outputs",
+    "forbidden_actions",
+    "requires_user_gate",
+    "next_skills"
+  ]
+}

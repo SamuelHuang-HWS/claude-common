@@ -1,0 +1,27 @@
+name: proj-qa
+role: main_chain
+entry_type: routed
+what: "项目质量验证主门禁，负责实现后的验证、审查、安全检查和 QA 结论"
+when: "代码实现完成后，需要 build/typecheck/lint/test、代码审查、黑盒验证或提交前质量判断时"
+required_inputs:
+  - implementation_result
+optional_inputs:
+  - verification_level
+  - changed_files
+  - acceptance_criteria
+required_outputs:
+  - qa_verdict
+  - verification_results
+  - findings
+  - handoff
+expected_output_format: structured
+forbidden_actions:
+  - feature_development
+  - architecture_redesign
+  - commit_changes
+requires_user_gate: true
+next_skills:
+  - proj-exec
+  - proj-docs
+  - proj-close
+max_rounds: 2

@@ -1,0 +1,24 @@
+name: proj-close
+role: main_chain
+entry_type: routed
+what: "项目任务最终收尾，负责健康检查、提交范围确认和 commit 预览/执行"
+when: "任务已完成必要验证，准备最终关闭、提交或按用户要求提交并推送时"
+required_inputs:
+  - final_task_state
+  - close_or_commit_intent
+optional_inputs:
+  - qa_verdict
+  - archive_dossier
+  - changelog_updates
+required_outputs:
+  - health_check_result
+  - commit_scope_preview
+  - commit_message
+  - close_status
+expected_output_format: structured
+forbidden_actions:
+  - auto_push_without_permission
+  - auto_stage_unrelated_changes
+  - modify_code_logic
+requires_user_gate: true
+next_skills: []

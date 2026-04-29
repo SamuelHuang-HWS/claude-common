@@ -1,0 +1,27 @@
+name: proj-pm
+role: enhancement
+entry_type: routed
+what: "需求分析与产品定义增强，收敛目标、用户价值、MVP 边界和 PRD 输入"
+when: "需求模糊、PRD 未成型或需要产品定义后才能进入工程主链时"
+required_inputs:
+  - raw_idea_or_vague_request
+optional_inputs:
+  - target_user_hint
+  - business_context
+  - constraints
+required_outputs:
+  - product_definition
+  - mvp_scope
+  - open_questions
+  - route
+expected_output_format: structured
+forbidden_actions:
+  - write_code
+  - execute_tests
+  - make_final_architecture_decision
+requires_user_gate: true
+next_skills:
+  - proj-start
+  - proj-review
+  - proj-struct
+  - proj-uiux
