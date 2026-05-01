@@ -13,6 +13,62 @@
 
 ## ✅ 当前激活 Skills
 
+### 0. verify
+- **来源**: custom (global)
+- **用途**: 统一执行 build/type/lint/test/security 验证
+- **适用场景**: 提交前、自测收尾、PR 前检查
+- **评分**: ⭐⭐⭐⭐⭐
+- **状态**: ✅ 激活中
+- **备注**: 与 `/verify` 命令配套，作为统一质量门禁入口
+
+### 0.1 checkpoint
+- **来源**: custom (global)
+- **用途**: 关键节点打点与回溯对比
+- **适用场景**: 多步改动、风险变更、回滚前确认
+- **评分**: ⭐⭐⭐⭐⭐
+- **状态**: ✅ 激活中
+- **备注**: 与 `/checkpoint` 命令配套，强化可追溯性
+
+### 0.2 memory-sync
+- **来源**: custom (global)
+- **用途**: Memory-first 拉取与回写流程
+- **适用场景**: 任务启动复用经验、任务收尾沉淀结论
+- **评分**: ⭐⭐⭐⭐
+- **状态**: ✅ 激活中
+- **备注**: 与 `/memory-sync` 命令配套，减少重复试错
+
+### 0.3 proj-review
+- **来源**: custom (global)
+- **用途**: 开发前方案评审，审查 PRD、MVP、技术方案、验收标准、风险与 Ready for Dev
+- **适用场景**: 方案审核、规格评审、开工前门禁
+- **评分**: ⭐⭐⭐⭐⭐
+- **状态**: ✅ 激活中
+- **备注**: 与 `proj-qa` 正交；只做开发前方案评审，不做代码验收
+
+### 0.4 proj-qa
+- **来源**: custom (global)
+- **用途**: 开发后代码验收，覆盖 build/type/lint/test/code review/security/黑盒增强
+- **适用场景**: 实现完成后、提交前、PR 前、回归验证
+- **评分**: ⭐⭐⭐⭐⭐
+- **状态**: ✅ 激活中
+- **备注**: 已内联承担原 QA 增强入口的黑盒验证与 Playwright 能力
+
+### 0.5 cross-review
+- **来源**: custom (global)
+- **用途**: step/task 级当前 agent + Codex 只读复核
+- **适用场景**: proj-exec 步骤完成后的复核、任务级交叉验证
+- **评分**: ⭐⭐⭐⭐
+- **状态**: ✅ 激活中
+- **备注**: 复用 consult 的调用约定；旧 `review` 仅保留兼容路由壳
+
+### 0.6 consult
+- **来源**: custom (global)
+- **用途**: 多智能体讨论能力层（poll / discuss / debate）
+- **适用场景**: 多方会诊、技术争议、架构取舍、找 codex 和 claude 讨论
+- **评分**: ⭐⭐⭐⭐
+- **状态**: ✅ 激活中
+- **备注**: 替代旧 CCB ask/pend/tmux；cross-review / proj-review / proj-qa 可按需调用
+
 ### 1. frontend-design
 - **来源**: anthropics/skills (官方)
 - **用途**: 创建生产级前端界面，高设计质量

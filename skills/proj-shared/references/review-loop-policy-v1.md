@@ -142,37 +142,30 @@ reviewer_permissions:
 
 ### 8.1 Provider 调用
 
-当前通过 `ask` / `pend` 命令调用 Codex：
+通过 `codex exec` 无状态调用 Codex：
 
 ```bash
-# 常规异步复核（默认）
-CCB_CALLER=manual ask codex --background "<review_packet prompt>"
-
-# 拉取结果
-pend codex
-
-# 同步调试（仅用于调试或用户显式要求）
-CCB_CALLER=manual ask codex --foreground "<review_packet prompt>"
+codex exec "<review_packet prompt>" 2>&1
 ```
 
-### 8.2 Caller 标识
+规则：
+- 不指定 `-m` 模型参数，用默认值；
+- 不做预检（不 ping、不 which、不读 config）；
+- cwd 设为目标项目目录；
+- Codex 只读，不修改文件。
 
-- 当前 `ask` 脚本支持的 caller：`manual`
-- 后续可扩展 `antigravity` caller 用于自动化
-- `CCB_CALLER` 环境变量用于区分调用来源
+多方讨论时可同时调用 Claude Code：
 
-### 8.3 Provider 不可用处理
+```bash
+echo "<review_packet prompt>" | claude -p --add-dir $PROJECT_DIR --output-format json --no-session-persistence 2>&1
+```
+
+### 8.2 Provider 不可用处理
 
 若 Codex 不可用（超时、连接失败等）：
 - 按 Sisyphus 红线"禁止静默失败"处理
 - 报告"现象 + 影响 + 建议处理"
-- 建议：降级为 Antigravity 单侧评审 + 用户 Gate 确认
-
-### 8.4 连通性检查
-
-```bash
-cping codex
-```
+- 建议：降级为当前 agent 单侧评审 + 用户 Gate 确认
 
 ---
 
@@ -183,9 +176,11 @@ cping codex
 - Review Loop 的具体操作由各 skill（proj-review / proj-qa / cross-review）实现
 - Review Packet 模板：`proj-shared/templates/review-packet-template.yaml`
 - Cross-review 完整流程：`cross-review/references/flow.md`
+- 多智能体讨论能力层：`consult/SKILL.md`
 
 ---
 
 ## 10. 一句话规则
 
-> Review Loop 最多 2 轮，超出交给用户；Reviewer 只读不写；adoption_log 记录所有采纳/拒绝/延迟决策；Codex 通过 ask/pend 调用。
+> Review Loop 最多 2 轮，超出交给用户；Reviewer 只读不写；adoption_log 记录所有采纳/拒绝/延迟决策；Codex 通过 `codex exec` 调用。
+

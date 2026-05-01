@@ -1,48 +1,34 @@
 # Cross Review — Flow
 
-Dual review by Antigravity (initial assessment) and a configurable cross-review provider (Codex by default).
+用于 step/task 级只读交叉复核。
+唯一外部调用方式：`codex exec`（通过 `consult` 能力层）。
 
-Protocol reference: `proj-shared/references/review-loop-policy-v1.md`
+## 1. Modes
 
-## Modes
+- `mode=step`: Review single step execution
+- `mode=task`: Review entire task completion
 
-- `mode=step`: Review single step execution (used by /tr Step 7)
-- `mode=task`: Review entire task completion (used by /tr Step 9.1)
-
-## Input
+## 2. Input
 
 | Field | step mode | task mode |
-|-------|-----------|-----------| 
+|-------|-----------|-----------|
 | target | Step title | Task name |
 | doneConditions | Step done conditions | Acceptance criteria |
 | changedFiles | Files changed in step | All files changed |
 | proof | Execution output | All step summaries |
 
-## Execution Flow
+## 3. Execution Flow
 
-### 0. Resolve Cross-Review Provider
+### 3.1 Local Initial Assessment
 
-Resolve the `reviewer` role using a two-layer lookup:
+当前 agent 先做本地初评：
 
-1. **CLAUDE.md Role Assignment table** (primary): Read the Role Assignment table in CLAUDE.md. The `reviewer` role maps to a provider (e.g., `codex`, `gemini`).
-2. **`.autoflow/roles.json`** (override): If this file exists in the repo, and `enabled == true` and `schemaVersion == 1`, use its `reviewer` field to override.
+- 完成了什么；
+- 是否满足 done conditions；
+- 已知风险；
+- 初步结论：**PASS** / **FIX** / **UNCERTAIN**。
 
-Default: `codex`
-
-### 1. Antigravity Initial Assessment
-
-Evaluate against done conditions / acceptance criteria:
-- What was accomplished?
-- Are all conditions met?
-- Any issues or risks?
-
-Preliminary verdict: **PASS** / **FIX** / **UNCERTAIN**
-
-### 2. Generate Review Packet
-
-Antigravity generates a structured `review_packet` for the cross-review provider.
-
-Template: `proj-shared/templates/review-packet-template.yaml`
+### 3.2 Generate review_packet
 
 ```yaml
 review_packet:
@@ -54,36 +40,30 @@ review_packet:
     - "<file path>"
   acceptance_criteria:
     - "<criterion>"
-  antigravity_assessment:
+  local_assessment:
     verdict: PASS | FIX | UNCERTAIN
     reason: "<reason>"
   verification_evidence:
     - command: "<command>"
       result: "<output>"
+  context_declaration: "<what context was provided, what was omitted>"
   questions:
-    - "是否同意 Antigravity 的评估？"
-    - "是否发现 Antigravity 遗漏的问题？"
-    - "最终建议：PASS 还是 FIX？"
+    - "是否同意本地评估？"
+    - "是否发现遗漏问题？"
+    - "最终建议 PASS / FIX / BLOCKED？"
 ```
 
-### 3. Cross-Review (Provider)
+### 3.3 Codex Read-only Review
 
-Send the review_packet to the resolved provider.
-
-**Invocation:**
+调用方式：
 
 ```bash
-# Background mode (default for routine review)
-CCB_CALLER=manual ask codex --background "Cross-review:
+codex exec "你是只读 Reviewer。不要修改文件、不要 commit/push。
+请根据以下 review_packet 检查当前目录中的相关文件。
 
-<review_packet YAML content>
+<review_packet YAML>
 
-Instructions:
-- You are a read-only Reviewer. Do NOT write files, commit, or push.
-- Evaluate the changes against the acceptance criteria.
-- Return a structured review_result in YAML format.
-- If FIX, list specific actionable items (max 5).
-- Respond ONLY with the YAML block below:
+请只输出 review_result YAML：
 
 review_result:
   status: PASS | FIX | BLOCKED
@@ -96,22 +76,18 @@ review_result:
   gate_decision:
     ready_for_next_step: YES | NO | CONDITIONAL
   required_actions:
-    - '<action>'"
+    - '<action>'" 2>&1
 ```
 
-```bash
-# Retrieve result
-pend codex
-```
+规则：
+- 不指定 `-m` 模型参数；
+- 不 ping、不预检；
+- cwd 必须为目标项目目录；
+- Codex 只读，不修改文件。
 
-```bash
-# Foreground mode (debug only)
-CCB_CALLER=manual ask codex --foreground "<prompt>"
-```
+### 3.4 Parse review_result
 
-### 4. Parse Review Result
-
-Expected `review_result` format from Codex:
+期望返回：
 
 ```yaml
 review_result:
@@ -128,18 +104,14 @@ review_result:
     - "<action>"
 ```
 
-If Codex response cannot be parsed as structured `review_result`:
-- Extract key points manually.
-- Log a WARN in the adoption_log.
-- Do NOT silently skip the review.
+如果结构化解析失败：
+- 不静默跳过；
+- 手动提取核心结论；
+- 在 adoption_log 中记录 WARN。
 
-### 5. Adoption Processing (Antigravity)
+### 3.5 Adoption Processing
 
-Antigravity processes each finding from the `review_result`:
-
-1. **Classify** each finding as `accepted`, `rejected`, or `deferred`.
-2. **rejected** findings MUST include a reason.
-3. **Generate** `adoption_log`:
+对每个 finding 分类为 `accepted` / `rejected` / `deferred`：
 
 ```yaml
 adoption_log:
@@ -155,24 +127,31 @@ adoption_log:
       reason: "<why deferred>"
 ```
 
-4. If `accepted` findings exist → execute corrections.
-5. If corrections warrant re-review → generate new `review_packet` for round 2.
-6. **Max 2 rounds.** If unresolved findings remain after round 2 → stop and submit to user Gate.
+规则：
+- `rejected` 必须说明理由；
+- P0/P1 不能无理由 deferred；
+- 如果 accepted findings 存在 → 执行修正。
 
-### 6. Final Decision
+### 3.6 Max 2 Rounds
 
-Combine Antigravity assessment + Codex review_result + adoption_log:
+- Round 1 发现问题 → 处理后可进入 Round 2；
+- Round 2 后仍有 unresolved findings → 停止，提交用户 Gate；
+- 禁止无限辩论。
 
-| Antigravity | Codex | Result |
-|-------------|-------|--------|
-| PASS | PASS | → PASS (continue) |
-| PASS | FIX | → FIX (Antigravity decides via adoption) |
+### 3.7 Final Decision
+
+合并 local_assessment + review_result + adoption_log：
+
+| Local | Codex | Result |
+|-------|-------|--------|
+| PASS | PASS | → PASS |
+| PASS | FIX | → FIX (via adoption) |
 | FIX | PASS | → FIX (merge items) |
 | FIX | FIX | → FIX (merge items) |
-| UNCERTAIN | * | → Antigravity makes final call |
-| * (round 2 unresolved) | * | → Escalate to user Gate |
+| UNCERTAIN | * | → 当前 agent 做最终判断 |
+| * (round 2 unresolved) | * | → ESCALATE to user Gate |
 
-## Mode-Specific Checklist
+## 4. Mode-Specific Checklist
 
 ### step mode
 - Done conditions satisfied?
@@ -186,10 +165,10 @@ Combine Antigravity assessment + Codex review_result + adoption_log:
 - Documentation complete?
 - Tests passing?
 
-## Principles
+## 5. Principles
 
-1. **Single Writer**: Only Antigravity writes files; Codex is read-only.
+1. **Single Writer**: 只有当前 agent 写文件；Codex 只读。
 2. **Structured I/O**: review_packet in, review_result out, adoption_log recorded.
-3. **Max 2 rounds**: Prevents runaway debate; unresolved → user Gate.
-4. **Traceable**: Full assessment chain captured for audit trail.
-5. **Unified schema**: Same output format for both step and task modes.
+3. **Max 2 rounds**: 防止无限辩论；unresolved → user Gate.
+4. **Traceable**: 完整评审链可审计。
+5. **No tmux**: 不使用 ask / pend / cping / CCB_CALLER。

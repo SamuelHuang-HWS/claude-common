@@ -1,0 +1,122 @@
+{
+  "generated_at": "2026-04-14 21:02:16 +0800",
+  "canonical_source": "/Users/eeo/claude-common/skills",
+  "extra_sources": {
+    "status": "/Users/eeo/.cc-switch/skills/status",
+    "sora": "/Users/eeo/.cc-switch/skills/sora"
+  },
+  "created": {
+    "claude_common": [
+      {
+        "name": "status",
+        "target": "/Users/eeo/.cc-switch/skills/status"
+      },
+      {
+        "name": "sora",
+        "target": "/Users/eeo/.cc-switch/skills/sora"
+      }
+    ],
+    "codex": [
+      {
+        "name": "continue",
+        "target": "/Users/eeo/claude-common/skills/continue"
+      },
+      {
+        "name": "figma-integration",
+        "target": "/Users/eeo/claude-common/skills/figma-integration"
+      },
+      {
+        "name": "review",
+        "target": "/Users/eeo/claude-common/skills/review"
+      },
+      {
+        "name": "status",
+        "target": "/Users/eeo/.cc-switch/skills/status"
+      }
+    ],
+    "gemini": [
+      {
+        "name": "all-plan",
+        "target": "/Users/eeo/claude-common/skills/all-plan"
+      },
+      {
+        "name": "review",
+        "target": "/Users/eeo/claude-common/skills/review"
+      },
+      {
+        "name": "sora",
+        "target": "/Users/eeo/.cc-switch/skills/sora"
+      }
+    ]
+  },
+  "skipped_existing": {
+    "claude_common": [],
+    "codex": [
+      "consult",
+      "cross-review",
+      "ai-news",
+      "all-plan",
+      "archive",
+      "draw",
+      "file-op",
+      "gemini-image",
+      "install-mcp",
+      "memory-sync",
+      "mounted",
+      "node",
+      "playwright",
+      "proj-adr",
+      "proj-checkpoint",
+      "proj-close",
+      "proj-dev",
+      "proj-docs",
+      "proj-exec",
+      "proj-pm",
+      "proj-qa",
+      "proj-review",
+      "proj-shared",
+      "proj-start",
+      "proj-struct",
+      "proj-uiux",
+      "refactor-clean",
+      "remember",
+      "schedule",
+      "svgskill-pro",
+      "tapd-connect",
+      "ui_ux_pro_max"
+    ],
+    "gemini": [
+      "consult",
+      "cross-review",
+      "ai-news",
+      "archive",
+      "draw",
+      "figma-integration",
+      "gemini-image",
+      "install-mcp",
+      "memory-sync",
+      "node",
+      "playwright",
+      "proj-adr",
+      "proj-checkpoint",
+      "proj-close",
+      "proj-dev",
+      "proj-docs",
+      "proj-exec",
+      "proj-pm",
+      "proj-qa",
+      "proj-review",
+      "proj-shared",
+      "proj-start",
+      "proj-struct",
+      "proj-uiux",
+      "refactor-clean",
+      "remember",
+      "schedule",
+      "status",
+      "svgskill-pro",
+      "tapd-connect",
+      "ui_ux_pro_max"
+    ]
+  }
+}

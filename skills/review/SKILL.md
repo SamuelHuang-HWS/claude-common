@@ -1,41 +1,14 @@
 ---
 name: review
-description: 架构师级代码审查
+description: 兼容路由壳。旧 review 入口已软废弃：方案评审转 proj-review，代码验收转 proj-qa，双模型 step/task 复核转 cross-review。
 ---
 
-# 🧐 深度代码审查
+# Deprecated Compatibility Router: review
 
-以资深架构师视角审查当前改动：
+`review` 旧入口已软废弃，不再承载主职责。请按意图选择新入口：
 
-## 1. 代码审美
-- 是否存在特殊情况？能否重构成通用逻辑？
-- 是否符合 DRY 原则？
-- 命名是否清晰？
+- **方案 / PRD / MVP / 技术方案 / 验收标准评审** → `proj-review`
+- **实现完成后的代码验收 / 测试 / 安全检查 / 黑盒验证** → `proj-qa`
+- **`/tr` step/task 的 Claude + Codex/Gemini 双模型复核** → `cross-review`
 
-## 2. 健壮性
-- 边界条件处理是否完善？
-- 错误路径是否清晰？
-- 异常是否被正确捕获和处理？
-
-## 3. 性能/安全
-- 是否有潜在性能问题？
-- 是否有安全风险？
-- 是否有内存泄漏风险？
-
-## 4. 一致性
-- 是否符合项目现有设计模式？
-- 是否符合 `docs/knowledge_base/` 中的约定？
-- 代码风格是否统一？
-
-## 5. 文档完整性
-- 任务文档是否已更新？
-- Learnings 是否已填写？
-- 复杂逻辑是否有注释？
-
-## 输出格式
-
-| 类型 | 位置 | 问题 | 建议 | 优先级 |
-|------|------|------|------|--------|
-| Bug | file:line | 描述 | 修复方案 | P0 |
-| 优化 | file:line | 描述 | 改进方案 | P1 |
-| 建议 | file:line | 描述 | 可选方案 | P2 |
+若用户只说“review 一下”且对象是文档或方案，优先使用 `proj-review`；若对象是已实现代码或 diff，优先使用 `proj-qa`；若明确是 step/task cross-review，使用 `cross-review`。
