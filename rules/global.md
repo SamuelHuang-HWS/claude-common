@@ -97,3 +97,31 @@ rules/
 │   └── verification.md    # 验证规则
 └── global.md              # 本文件
 ```
+
+---
+
+## 10. 共享记忆与真相源 (Shared Memory Protocol) [P1]
+
+> 生效范围：Hermes / Codex / Claude Code 等所有接入 knowledge-garden 的智能体。
+
+### 启动引导
+
+每次会话启动时，按顺序读取：
+1. `~/knowledge-garden/00-Meta/MEMORY.md` — 长期记忆与决策
+2. `~/knowledge-garden/SOUL.md` — 行为准则
+3. `~/knowledge-garden/USER.md` — 用户背景与偏好
+
+### 写入规范
+
+持久化到真相层时：
+1. 先向用户输出「拟写入摘要」（文件、新增事实、原因）
+2. 获得确认后写入 `00-Meta/MEMORY.md`
+3. 禁止写入密钥/凭据到任何记忆文件
+
+### 冲突处理
+
+当 agent 内置 memory 与 knowledge-garden 内容不一致时，以 knowledge-garden 为准。
+
+### 当前技术债
+
+- `IDENTITY.md` 仍指向 `openclaw/IDENTITY.md` — 待审计迁移。过渡期间不阻塞。
