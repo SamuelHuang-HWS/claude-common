@@ -121,7 +121,3 @@ rules/
 ### 冲突处理
 
 当 agent 内置 memory 与 knowledge-garden 内容不一致时，以 knowledge-garden 为准。
-
-### 当前技术债
-
-- `IDENTITY.md` 仍指向 `openclaw/IDENTITY.md` — 待审计迁移。过渡期间不阻塞。
