@@ -1,0 +1,68 @@
+# Sisyphus Role-Adapter Layer Handoff Packet Template
+# Status: Draft v1
+# Usage: Copy this template for dry-run role handoff. Do not store secrets.
+
+handoff_packet:
+  schema_version: 1
+  mission_id: "<YYYY-MM-DD-topic>"
+  packet_id: "hp-<short-id>"
+  created_at: "<ISO-8601 timestamp>"
+
+  from_role: "orchestrator"
+  to_role: "implementer" # implementer | reviewer | qa-auditor
+  expected_return_role: "orchestrator"
+
+  phase: "execute" # plan | execute | review | qa | close
+  task_summary: "<one-sentence task summary>"
+
+  context_scope:
+    mode: "diff_plus_contract" # contract_only | diff_plus_contract | full_project
+    include:
+      - "<allowed file, directory, diff, or artifact>"
+    exclude:
+      - "~/.claude/agents"
+      - "~/.codex/agents"
+      - "<out-of-scope file or directory>"
+
+  required_protocols:
+    - "skills/proj-shared/references/role-adapter-layer-protocol.md"
+    - "skills/proj-shared/references/handoff-packet-schema.md"
+    - "skills/proj-shared/references/protocol-boot-sequence.md"
+
+  acceptance_criteria:
+    - id: "AC-001"
+      description: "<observable acceptance criterion>"
+      verification: "review" # command | manual | review
+
+  input_evidence:
+    - type: "protocol_evidence" # protocol_evidence | review_result | execution_definition | qa_result | command
+      ref: "<source artifact or message>"
+      summary: "<short evidence summary>"
+
+  role_instructions:
+    allowed_actions:
+      - "Read files listed in context_scope.include."
+      - "Perform only the role-specific task requested by this packet."
+    forbidden_actions:
+      - "Do not modify active agent configs."
+      - "Do not commit or push."
+      - "Do not spawn other role agents."
+      - "Do not bypass orchestrator routing."
+    output_requirements:
+      - "protocol_evidence"
+      - "role_result"
+      - "handoff_packet_check"
+      - "next_handoff"
+
+  integrity:
+    checksum_algorithm: "sha256"
+    checksum_payload: "canonical_yaml_without_integrity.checksum"
+    checksum: "<placeholder: optional for dry-run>"
+
+  return_packet:
+    required: true
+    expected_outputs:
+      - "protocol_evidence"
+      - "role_result"
+      - "handoff_packet_check"
+      - "next_handoff"

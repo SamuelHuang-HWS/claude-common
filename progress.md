@@ -1,0 +1,41 @@
+# Progress
+
+- Started Phase 1 implementation after user approval.
+- Read planning-with-files and target file snippets.
+- Applied Phase 1 edits to proj-start, proj-qa, default-contract, and proj-shared reading principles.
+- Validated default-contract YAML parses successfully.
+- Confirmed protocol_evidence sections are present in proj-start/proj-qa/proj-shared/default-contract.
+- Addressed Claude Code required fixes: aligned proj-qa scope to any proj-* upstream, made checked_files dynamic, and added standards for proj_qa.required_checks.
+- Recorded untracked-source note and Phase 2 optimizations in findings.md.
+- Recorded Claude Code final review result: Phase 1 logic acceptable, but repository has out-of-scope dirty tracked changes.
+- Adopted selective-staging strategy: Phase 1 must only include explicit in-scope files; no blanket git add.
+- Started Phase 2 after Claude Code plan pre-review.
+- Adopted 2a/2b split concept but implementing as one minimal patch with protocol layer + skill output/evidence fields.
+- Implemented Phase 2 minimal patch: added verifier-gate-protocol, registered it, added verifier_gate config, extended proj-review/proj-exec/proj-qa schemas.
+- Validation caught invalid YAML example in proj-exec handoff union syntax; fixed by quoting union examples.
+- Addressed Phase 2 final review optional clarity fixes: explicit proj_qa required_protocols: [] and recheck_required semantics.
+- Started Phase 3 after Claude Code plan pre-review.
+- Implemented Phase 3 patch: proj-close evidence gate, proj-docs docs_evidence/protocol_evidence, default-contract level-aware sample config, verifier-gate coverage statement.
+- Applied optional Phase 3 review improvement: renamed verifier-gate-protocol Section 2 to Phase 2–3 scope.
+- Addressed dual-review P2 findings in proj-qa: normalized severity enum to P0-P3 and made same_agent a dynamic true|false field.
+
+- Started Phase 4 Role-Adapter Layer after user approval.
+- Read planning-with-files, existing planning files, git status, proj-shared, verifier/review/harness references, and proj-exec/proj-review/proj-qa contracts.
+- Established Phase 4 scope: protocol/schema docs, three role contracts, Claude Code templates, Codex experimental skeletons, Gemini status note, proj-shared/default-contract registration.
+- Created Phase 4 protocol docs: role-adapter-layer-protocol, role-contract-schema, handoff-packet-schema, protocol-boot-sequence.
+- Created v1 role contracts for implementer, reviewer, and qa-auditor.
+- Created Claude Code adapter templates and Codex experimental skeleton templates; documented Gemini adapter as research_note.
+- Registered Role-Adapter Layer references and adapter directories in proj-shared/SKILL.md.
+- Added role_adapter defaults and QA role isolation check to default-contract.yaml.
+- Added minimal role-adapter integration fields to proj-exec, proj-review, and proj-qa.
+- Ran Gemini + Claude Code review for Phase 4 v1 implementation.
+- Addressed Claude Code P1 findings and selected P2 improvements.
+- Revalidated YAML role contracts, default contract, Codex TOML skeletons, and role required_protocol references.
+- Ran targeted Claude Code recheck for previous P1 findings; result PASS, ready_for_next_step=YES.
+- Fixed Codex self-review P1 findings: reviewer adapters now read gate-artifact-policy-v1; qa-auditor now requires and outputs its own protocol_evidence in addition to upstream protocol_evidence_check.
+- Revalidated YAML/TOML parsing, role required_protocol paths, and targeted P1 fix assertions.
+- Ran lightweight post-fix consistency review: YAML/TOML parsing, role required_protocol path existence, role-to-adapter boot sequence alignment, required output mention checks, and default-contract role path checks all passed.
+- Cleaned low-risk generated junk under project directory: `.DS_Store` files and Python `__pycache__` directories. No source/config/document files were deleted.
+- Added minimal `.gitignore` for macOS metadata and Python/test/type/lint caches to prevent regenerated junk from reappearing in git status.
+- Claude Code timed out twice while attempting to create Phase 4 pilot validation assets; confirmed no target files were produced by those attempts.
+- Added `handoff-packet-template.yaml` and `role-adapter-pilot-validation.md` directly, then registered them in proj-shared and default-contract.

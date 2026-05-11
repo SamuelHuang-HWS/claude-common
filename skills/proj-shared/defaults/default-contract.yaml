@@ -130,6 +130,145 @@ review_loop:
     can_push: false
   adoption_log_required: true
 
+verifier_gate:
+  enabled: true
+  max_rounds: 2
+  inherits:
+    - skills/proj-shared/references/review-loop-policy-v1.md
+    - skills/proj-shared/references/gate-artifact-policy-v1.md
+    - skills/proj-shared/references/harness-model-v1.md
+  phase_2_scope:
+    gates:
+      - gate_3
+    handoffs:
+      - proj_exec_to_proj_qa
+  blocking_threshold: P1
+  owner_resolution_required: true
+  fail_closed_on_unresolved_p0_p1: true
+  reviewer_permissions:
+    can_read: true
+    can_suggest_patch: true
+    can_write_files: false
+    can_commit: false
+    can_push: false
+
+role_adapter:
+  enabled: true
+  formal_name: Role-Adapter Layer
+  alias: Native Agent Adapter
+  runtime_policy: no_custom_runtime
+  orchestrator:
+    role: main_session
+    register_as_subagent: false
+    reason: "v1 由主会话负责编排，避免独立 orchestrator subagent 与主会话争夺调度权。"
+  v1_roles:
+    - role_id: implementer
+      contract: skills/proj-shared/agents/roles/implementer.role.yaml
+      primary_skill: skills/proj-exec/SKILL.md
+    - role_id: reviewer
+      contract: skills/proj-shared/agents/roles/reviewer.role.yaml
+      primary_skill: skills/proj-review/SKILL.md
+    - role_id: qa-auditor
+      contract: skills/proj-shared/agents/roles/qa-auditor.role.yaml
+      primary_skill: skills/proj-qa/SKILL.md
+  adapters:
+    claude_code:
+      status: concrete_template
+      path: skills/proj-shared/agent-adapters/claude-code
+    codex:
+      status: experimental_skeleton
+      path: skills/proj-shared/agent-adapters/codex
+      production_use: false
+    gemini:
+      status: research_note
+      path: skills/proj-shared/agent-adapters/gemini
+      production_use: false
+  required_protocols:
+    - skills/proj-shared/references/role-adapter-layer-protocol.md
+    - skills/proj-shared/references/role-contract-schema.md
+    - skills/proj-shared/references/handoff-packet-schema.md
+    - skills/proj-shared/references/protocol-boot-sequence.md
+  pilot_validation:
+    enabled: true
+    template: skills/proj-shared/templates/handoff-packet-template.yaml
+    protocol: skills/proj-shared/references/role-adapter-pilot-validation.md
+    active_config_write_allowed: false
+  fail_closed_on_missing_boot_evidence: true
+
+protocol_evidence:
+  enabled: true
+  fail_closed_on_missing: true
+  required_fields:
+    - protocol_file
+    - key_rule_extracted
+    - compliance_action
+    - missing_evidence
+  anti_forgery:
+    require_rule_excerpt: true
+    allow_section_reference: true
+    verifier_sample_check_min: 1
+    verifier_sample_check_min_by_level:
+      L0: 1
+      L1: 2
+      L2: 3
+  phase_requirements:
+    proj_start:
+      required_protocols:
+        - skills/proj-start/SKILL.md
+        - skills/proj-shared/defaults/default-contract.yaml
+    proj_review:
+      required_protocols:
+        - skills/proj-review/SKILL.md
+        - skills/proj-shared/references/verifier-gate-protocol.md
+        - skills/proj-shared/references/review-loop-policy-v1.md
+      required_outputs:
+        - protocol_evidence
+        - verifier_gate
+        - adoption_log.owner_resolution
+    proj_exec:
+      required_protocols:
+        - skills/proj-exec/SKILL.md
+        - skills/proj-shared/references/verifier-gate-protocol.md
+        - skills/proj-shared/references/role-adapter-layer-protocol.md
+      required_outputs:
+        - protocol_evidence
+        - verifier_handoff
+    proj_qa:
+      required_protocols: []
+      required_checks:
+        - id: protocol_evidence_present
+          standard: "上游 proj-* 输出必须包含 protocol_evidence；缺失时 protocol_evidence_check.status=fail。"
+        - id: missing_evidence_empty
+          standard: "protocol_evidence.missing_evidence 必须为空；非空时 QA 不得 PASS 或 ready_for_next_step=YES。"
+        - id: sampled_rule_exists
+          standard: "至少抽查 verifier_sample_check_min 条 key_rule_extracted，确认摘录指向的 protocol_file 存在，且摘录不是空泛的已阅读声明。"
+        - id: verifier_gate_present
+          standard: "若上游声明需要 Verifier Gate，则必须提供 verifier_gate 或 verifier_handoff 证据。"
+        - id: owner_resolution_closed
+          standard: "若存在 P0/P1 reviewer finding，则 adoption_log.owner_resolution 必须逐条闭环；否则 QA 不得 PASS。"
+        - id: role_adapter_isolation
+          standard: "若上游来自 Role-Adapter Layer，qa-auditor 必须证明其 role/instance 与 implementer 不同；无法证明时不得 PASS。"
+    proj_docs:
+      required_protocols:
+        - skills/proj-docs/SKILL.md
+        - skills/proj-shared/references/doc-lifecycle.md
+        - skills/proj-shared/defaults/default-contract.yaml
+      required_outputs:
+        - protocol_evidence
+        - docs_evidence
+    proj_close:
+      required_protocols:
+        - skills/proj-close/SKILL.md
+        - skills/proj-shared/references/commit-policy.md
+        - skills/proj-shared/defaults/default-contract.yaml
+      required_checks:
+        - id: upstream_protocol_evidence_present
+          standard: "上游 proj-qa/proj-docs 必须提供协议证据或明确说明不适用。"
+        - id: verifier_gate_closed_or_not_required
+          standard: "Verifier Gate 状态必须为 closed/pass/not_required；pending/blocked 时不得 commit_ready=YES。"
+        - id: docs_evidence_present
+          standard: "若本任务应经过 proj-docs，则必须存在 docs_evidence；缺失时不得提交。"
+
 discovery:
   workspace_structured_fallbacks:
     - docs/plans
